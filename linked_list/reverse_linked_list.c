@@ -1,4 +1,4 @@
-// Print the middle element of a linked list
+// Reverse a linked list and print out the reversed linked list.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,33 +54,40 @@ int get_node_count(Node_t* head) {
     return node_count;
 }
 
-Node_t* find_middle_node(Node_t* head) {
-    Node_t* node = head;
-    Node_t* slow_node = head;
-    int node_count = 0;
+// |------|    |------|    |------|    |------|
+// | prev | -> | curr | -> | next | -> |      | ---
+// |------|    |------|    |------|    |------|
+Node_t* reverse_linked_list(Node_t* head) {
+    Node_t* curr = head;
+    Node_t* prev = NULL;
+    Node_t* next = (curr == NULL) ? NULL : curr->next;
 
-    while (node != NULL) {
-        node = node->next;
-        node_count++;
-        if ((node_count % 2 == 0) && (node != NULL)) {
-            slow_node = slow_node->next;
-        }
+    //   NULL        head      curr->next
+    // |------|    |------|    |------|    |------|
+    // | prev | -> | curr | -> | next | -> |      | ---
+    // |------|    |------|    |------|    |------|
+
+    while ((curr != NULL) && (next != NULL) && (next->next != NULL)) {
+        // Move all 3 pointers to the next node
+        prev = curr;
+        curr = next;
+        next = next->next;
+
+        // Swap prev and curr node links
+        curr->next = prev;
     }
 
-    return slow_node;
-}
+    // Now next->next is NULL, then next is head and next->next should be curr
+    next->next = curr;
+    head->next = NULL;
+    head = next;
 
-Node_t* find_middle_node_faster(Node_t* head) {
-    Node_t* node = head;
-    Node_t* fast_node = head;
+    //   curr        next        NULL
+    // |------|    |------|    |------|
+    // | prev | <- | curr | -> | next |
+    // |------|    |------|    |------|
 
-    while ((node != NULL) && (fast_node != NULL) &&
-           (fast_node->next != NULL) && (fast_node->next->next != NULL)) {
-        node = node->next;
-        fast_node = fast_node->next->next;
-    }
-
-    return node;
+    return head;
 }
 
 int main()
@@ -92,11 +99,8 @@ int main()
     int node_count = get_node_count(head);
     printf("Number of nodes: %i\n", node_count);
 
-    Node_t* slow_middle_node = find_middle_node(head);
-    printf("Middle node (slow): %i\n", slow_middle_node->value);
-
-    Node_t* fast_middle_node = find_middle_node_faster(head);
-    printf("Middle node (fast): %i\n", fast_middle_node->value);
+    head = reverse_linked_list(head);
+    print_linked_list_nodes(head);
 
     return 0;
 }
