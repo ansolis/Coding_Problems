@@ -1,4 +1,4 @@
-// THis example creates a linked list and prints its nodes.
+// This example creates a linked list and prints its nodes.
 
 #include <stdio.h>
 #include <stdlib.h>
