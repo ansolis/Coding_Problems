@@ -1,4 +1,4 @@
-// Write a function that returns the height of a binary tree
+// Write a function for binary tree level traversal
 
 // Queue:
 //                         tail
