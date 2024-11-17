@@ -42,6 +42,18 @@ void print_linked_list_nodes(Node_t* head) {
     }
 }
 
+void delete_linked_list(Node_t** head) {
+    Node_t* node = *head;
+    Node_t* next = NULL;
+    while (node != NULL) {
+        next = node->next;
+        free(node);
+        node = next;
+    }
+
+    *head = NULL;
+}
+
 int get_node_count(Node_t* head) {
     Node_t* node = head;
     int node_count = 0;
@@ -97,6 +109,8 @@ int main()
 
     Node_t* fast_middle_node = find_middle_node_faster(head);
     printf("Middle node (fast): %i\n", fast_middle_node->value);
+
+    delete_linked_list(&head);
 
     return 0;
 }
