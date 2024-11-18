@@ -1,10 +1,11 @@
 // Write a function for binary tree level traversal
 
 // Queue:
-//                         tail
-//                          \|/
-// head -> node -> node -> node -> NULL
-// Dequeue from head; enqueue at tail
+//    front           rear
+//     \|/             \|/
+//     node -> node -> node -> NULL
+// Dequeue from front; from points to the oldest item in the queue.
+// Enqueue at the rear; rear points to the newest item in the queue.
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -22,14 +23,14 @@ typedef struct QueueNode {
 } QueueNode_t;
 
 typedef struct Queue {
-    struct QueueNode* head;
-    struct QueueNode* tail;
+    struct QueueNode* rear;
+    struct QueueNode* front;
 } Queue_t;
 
 Queue_t* create_queue(void) {
     Queue_t* queue = (Queue_t*)malloc(sizeof(Queue_t));
-    queue->head = NULL;
-    queue->tail = NULL;
+    queue->rear = NULL;
+    queue->front = NULL;
     return queue;
 }
 
@@ -37,33 +38,33 @@ void enqueue(Queue_t* queue, TreeNode_t* node) {
     QueueNode_t* queue_node = (QueueNode_t*)malloc(sizeof(QueueNode_t));
     queue_node->tree_node = node;
     queue_node->next = NULL;
-    if (queue->head == NULL) {
-        queue->head = queue_node;
-        queue->tail = queue_node;
+    if (queue->front == NULL) {
+        queue->front = queue_node;
+        queue->rear = queue_node;
     } else {
-        queue->tail->next = queue_node;
-        queue->tail = queue_node;
+        queue->rear->next = queue_node;
+        queue->rear = queue_node;
     }
 }
 
 TreeNode_t* dequeue(Queue_t* queue) {
-    QueueNode_t* queue_node = queue->head;
+    QueueNode_t* queue_node = queue->front;
     if (queue_node == NULL) {
         return NULL;
     }
 
     if (queue_node->next == NULL) {
-        queue->head = NULL;
-        queue->tail = NULL;
+        queue->front = NULL;
+        queue->rear = NULL;
     } else {
-        queue->head = queue_node->next;
+        queue->front = queue->front->next;
     }
 
     return queue_node->tree_node;
 }
 
 bool is_queue_empty(Queue_t* queue) {
-    return queue->head == NULL;
+    return queue->front == NULL;
 }
 
 static TreeNode_t* create_tree_node(int value) {
