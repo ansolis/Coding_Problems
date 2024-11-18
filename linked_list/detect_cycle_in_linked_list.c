@@ -1,5 +1,6 @@
 // This example detects a cycle in a linked list
 // and finds the starting node of the cycle.
+// See Floyd's cycle-finding algorithm.
 
 // The solution is based on the fast and low pointers (hare and tortoise)
 // where the slow pointer advances one step at a time and the fast pointer
