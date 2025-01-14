@@ -12,9 +12,7 @@ int atoi(char* str) {
     if (*str == '-') {
         sign = -1;
         str++;
-    }
-
-    if (*str == '+') {
+    } else if (*str == '+') {
         sign = 1;
         str++;
     }
