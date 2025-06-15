@@ -25,14 +25,14 @@ typedef struct Node {
 
 static Node_t* create_node(int value) {
     Node_t* node = (Node_t*)malloc(sizeof(Node_t));
-    node->value = value;
-    node->next = NULL;
+    node->value  = value;
+    node->next   = NULL;
     return node;
 }
 
 int get_node_count(Node_t* head) {
-    Node_t* node = head;
-    int node_count = 0;
+    Node_t* node       = head;
+    int     node_count = 0;
 
     while (node != NULL) {
         node_count++;
@@ -47,15 +47,15 @@ static Node_t* create_linked_list(int values[], int rand[], int size) {
     Node_t* node = NULL;
     Node_t* prev = NULL;
     Node_t* nodes[NODE_COUNT];
-    int count = 0;
+    int     count = 0;
 
     for (int i = 0; i < size; i++) {
         node = create_node(values[i]);
         if (prev != NULL) {
             prev->next = node;
         }
-        head = (head == NULL) ? node : head;
-        prev = node;
+        head           = (head == NULL) ? node : head;
+        prev           = node;
         nodes[count++] = node;
     }
 
@@ -84,8 +84,9 @@ Node_t* copy_list(Node_t* head) {
     if (!head) {
         return NULL;
     }
-  
-    // Original linked list
+
+    // Original linked list (N is the next pointer, R is the random
+    // node pointer):
     //
     //     |-------------------------------------------|
     //     |           |---------------------------|   |
@@ -95,7 +96,7 @@ Node_t* copy_list(Node_t* head) {
     // |------|      |------|      |------|      |------|
     //    |R                         /|\                  //
     //    |---------------------------|
-    // 
+    //
     // After we create a new node 1' and point its next pointer
     // to node 2 (what 1->next was pointing to) and point 1' node's
     // rand pointer to 3 (what 1->rand was pointing to), and point
@@ -112,14 +113,13 @@ Node_t* copy_list(Node_t* head) {
     // |      |                        |
     // |  1'  |R------------------------
     // |------|
-    
 
     while (node != NULL) {
-        new_node = create_node(node->value);
+        new_node       = create_node(node->value);
         new_node->next = node->next;
         new_node->rand = node->rand;
-        node->next = new_node;
-        node = new_node->next;
+        node->next     = new_node;
+        node           = new_node->next;
     }
 
     //
@@ -137,7 +137,7 @@ Node_t* copy_list(Node_t* head) {
     //     |   |-----|  R|  |   |-----|  R|   |  |-----|       |  |-----|
     //     --->|  1' |----  --->|  2' |----   -->|  3' |       -->|  4' |
     //         |-----|          |-----|          |-----|          |-----|
-    
+
     // Do another pass to point new node's next pointer to the next new
     // node and new node's rand pointer to the next of what they're pointing
     // to now. We get new nodes that look like the original nodes.
@@ -146,20 +146,19 @@ Node_t* copy_list(Node_t* head) {
     while ((new_node != NULL) && (new_node->next != NULL)) {
         new_node->next = new_node->next->next;
         new_node->rand = new_node->rand->next;
-        new_node = new_node->next;
+        new_node       = new_node->next;
     }
 
     return head->next;
 }
 
-int main()
-{
+int main() {
     int values[NODE_COUNT] = {1, 2, 3, 4, 5};
-    int rand[NODE_COUNT] = {3, 5, 1, 2, 4};
+    int rand[NODE_COUNT]   = {3, 5, 1, 2, 4};
 
     Node_t* head = create_linked_list(values, rand, ARR_SIZE(values));
     print_linked_list_nodes(head);
-    
+
     int node_count = get_node_count(head);
     printf("Number of nodes: %i\n", node_count);
 

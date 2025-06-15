@@ -1,5 +1,8 @@
-
 // Note: This code is not working yet and needs to be debugged
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define HASH_CAPACITY  1000
 
@@ -136,3 +139,7 @@ void lRUCacheFree(LRUCache* obj) {
 // [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
 // Output
 // [null, null, null, 1, null, -1, null, -1, 3, 4]
+
+int main() {
+    return -1;
+}
