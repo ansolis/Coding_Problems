@@ -7,6 +7,15 @@
 // X   X   X X X
 // = = = = = = =
 // 3 0 1 0 4 1 2
+//
+// Expected answer: 9 (the 9 dashes below represent the trapped water):
+//
+//         X
+// X - - - X
+// X - - - X - X
+// X - X - X X X
+// = = = = = = =
+// 3 0 1 0 4 1 2
 
 #include <stdio.h>
 

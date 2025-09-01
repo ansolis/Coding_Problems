@@ -1,0 +1,3 @@
+[submodule "embedded"]
+	path = embedded
+	url = git@github.com:ansolis/Coding_Problems_Private.git
