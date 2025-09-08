@@ -15,54 +15,47 @@
 #include <string.h>
 
 static bool is_opening_paren(char chr) {
-    if (chr == '{' || chr == '(' || chr == '[') {
-        return true;
-    }
-
-    return false;
+    return chr == '{' || chr == '(' || chr == '[';
 }
 
 static bool is_closing_paren(char chr) {
-    if (chr == '}' || chr == ')' || chr == ']') {
-        return true;
-    }
-
-    return false;
+    return chr == '}' || chr == ')' || chr == ']';
 }
 
 static bool is_matching_paren(char opening_paren, char closing_paren) {
-    if (opening_paren == '{' && closing_paren == '}' ||
-        opening_paren == '(' && closing_paren == ')' ||
-        opening_paren == '[' && closing_paren == ']') {
-        return true;
-    }
-
-    return false;
+    return ((opening_paren == '{' && closing_paren == '}') ||
+        (opening_paren == '(' && closing_paren == ')') ||
+        (opening_paren == '[' && closing_paren == ']'));
 }
 
-static bool is_matching_parens_only(char* str) {
-    int len = strlen(str);
+static bool is_matching_parens_only(const char* str) {
+    size_t len = strlen(str);
 
     if (len == 0) {
         return true;
     }
 
-    char stack[len] = {};
+    // Using a Variable Length Array (VLA) as a stack. This is a C99 feature.
+    // For very large strings, a dynamically allocated stack (using malloc)
+    // would be safer to prevent stack overflow.
+    char stack[len];
     int stack_top_idx = -1;
 
-    for (int i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         if (is_opening_paren(str[i])) {
             stack_top_idx++;
             stack[stack_top_idx] = str[i];
         } else if (is_closing_paren(str[i])) {
             if (stack_top_idx < 0 ) {
+                // Closing parenthesis with no matching opening one.
                 return false;
             }
             if (!is_matching_paren(stack[stack_top_idx], str[i])) {
+                // Mismatched parenthesis.
                 return false;
             }
 
-            // Remove the opening matched parenthesis from the stack
+            // Pop the matched opening parenthesis from the stack.
             stack_top_idx--;
         } else {
             // Non-parenthesis character - continue
@@ -79,37 +72,29 @@ static bool is_matching_parens_only(char* str) {
 int main(void) {
     printf("Matching parens only:\n");
 
-    char* str = "{a[b()]c}d";
-    bool result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
+    const char* test_cases[] = {
+        "(({[{{()}}]})){}[]()",
+        "",
+        "[abc]def",
+        "((([))){}",
+        "{",
+        "(]",
+        "{a[b()]c}d",
+        "{a[b()]cd",
+        "a[b()]c}d",
+        "{a[b)]c}d",
+        "{a[b(]c}d",
+        "a(b",
+        "]"
+    };
+    int num_test_cases = sizeof(test_cases) / sizeof(test_cases[0]);
 
-    str = "{a[b()]cd";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "a[b()]c}d";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "{a[b)]c}d";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "{a[b(]c}d";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "a(b";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
-
-    str = "]";
-    result = is_matching_parens_only(str);
-    printf("%s, %s\n", str, result ? "TRUE" : "FALSE");
+    for (int i = 0; i < num_test_cases; i++) {
+        const char* str = test_cases[i];
+        bool result = is_matching_parens_only(str);
+        // Print string in quotes for clarity, especially for the empty string.
+        printf("\"%s\", %s\n", str, result ? "TRUE" : "FALSE");
+    }
 
     return 0;
 }
